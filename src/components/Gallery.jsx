@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import SectionHeader from "./ui/SectionHeader";
 import { supabase } from "../utils/supabase";
 import { IG_URL } from "../utils/links";
+import { useLang } from "../i18n/LangContext";
 
 const PlayIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
@@ -70,11 +71,9 @@ function LightBox({ items, index, onClose }) {
       <button onClick={onClose} className="absolute top-4 right-4 text-white/70 hover:text-white z-10 p-1">
         <CloseIcon />
       </button>
-
       <p className="absolute top-4 left-1/2 -translate-x-1/2 text-white/50 text-sm z-10">
         {current + 1} / {items.length}
       </p>
-
       {items.length > 1 && (
         <button
           onClick={(e) => { e.stopPropagation(); setCurrent((c) => (c - 1 + items.length) % items.length); }}
@@ -83,7 +82,6 @@ function LightBox({ items, index, onClose }) {
           <ChevronIcon dir="left" />
         </button>
       )}
-
       <div
         className="w-full max-w-5xl max-h-[85vh] mx-12 sm:mx-16 flex items-center justify-center px-2"
         onClick={(e) => e.stopPropagation()}
@@ -94,11 +92,9 @@ function LightBox({ items, index, onClose }) {
           <img src={item.url} alt={item.label} className="max-w-full max-h-[85vh] object-contain rounded-lg" />
         )}
       </div>
-
       <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-xs sm:text-sm text-center px-4">
         {item.label}
       </p>
-
       {items.length > 1 && (
         <button
           onClick={(e) => { e.stopPropagation(); setCurrent((c) => (c + 1) % items.length); }}
@@ -115,6 +111,7 @@ export default function Gallery() {
   const [items, setItems]       = useState([]);
   const [loading, setLoading]   = useState(true);
   const [lightbox, setLightbox] = useState(null);
+  const { t } = useLang();
 
   useEffect(() => { fetchItems(); }, []);
 
@@ -135,14 +132,12 @@ export default function Gallery() {
   return (
     <section id="galeria" className="py-16 px-4 sm:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
-        <SectionHeader tag="Galería" title="Fotos y videos" />
+        <SectionHeader tag={t.gallery.tag} title={t.gallery.title} />
 
         {loading ? (
-          <div className="text-center text-neutral-400 py-12 text-sm">Cargando galería...</div>
+          <div className="text-center text-neutral-400 py-12 text-sm">{t.gallery.loading}</div>
         ) : items.length === 0 ? (
-          <div className="text-center text-neutral-400 py-12 text-sm">
-            Próximamente fotos y videos de nuestros vuelos.
-          </div>
+          <div className="text-center text-neutral-400 py-12 text-sm">{t.gallery.empty}</div>
         ) : (
           <div className={`grid gap-2 ${gridCols} auto-rows-[180px] sm:auto-rows-[240px] md:auto-rows-[280px]`}>
             {items.map((item, i) => (
@@ -174,11 +169,11 @@ export default function Gallery() {
         )}
 
         <p className="text-center text-sm text-neutral-500 mt-5 flex items-center justify-center gap-1.5 flex-wrap">
-          Síguenos en Instagram{" "}
+          {t.gallery.ig}{" "}
           <a href={IG_URL} target="_blank" rel="noopener noreferrer" className="text-sky-600 hover:underline flex items-center gap-1">
             <InstagramIcon /> @go_fly_varadero
           </a>{" "}
-          para ver más contenido
+          {t.gallery.igSub}
         </p>
       </div>
 

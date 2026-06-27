@@ -1,5 +1,6 @@
 import WhatsAppIcon from "./ui/WhatsAppIcon";
 import { waLink, IG_URL, TK_URL, FB_URL } from "../utils/links";
+import { useLang } from "../i18n/LangContext";
 
 const InstagramIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -21,29 +22,23 @@ const FacebookIcon = () => (
   </svg>
 );
 
-const WA_MSG = `Hola! Quiero reservar un vuelo en Go Fly Varadero.
-
-Mis datos:
-- Fecha:
-- Hora:
-- Hotel:
-- Habitación:
-- Nombre:
-- Total de vuelos:`;
-
 export default function CTASection() {
+  const { t, lang } = useLang();
+
+  const WA_MSG = lang === "en"
+    ? `Hi! I want to book a flight at Go Fly Varadero.\n\nMy details:\n- Date:\n- Time:\n- Hotel:\n- Room:\n- Name:\n- Total flights:`
+    : `Hola! Quiero reservar un vuelo en Go Fly Varadero.\n\nMis datos:\n- Fecha:\n- Hora:\n- Hotel:\n- Habitación:\n- Nombre:\n- Total de vuelos:`;
+
   return (
     <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-br from-sky-950 via-sky-900 to-teal-900 text-center">
       <p className="text-sky-300 text-xs sm:text-sm font-medium tracking-widest uppercase mb-3">
-        ¿Listo para volar?
+        {t.cta.tag}
       </p>
-      <h2 className="text-2xl sm:text-3xl font-medium text-white mb-3">Reserva tu vuelo hoy</h2>
+      <h2 className="text-2xl sm:text-3xl font-medium text-white mb-3">{t.cta.title}</h2>
       <p className="text-sky-100/70 text-sm sm:text-base max-w-md mx-auto mb-3 leading-relaxed">
-        Escríbenos por WhatsApp con tu fecha, hotel y habitación y nuestro auto te recogerá en el lugar acordado.
+        {t.cta.sub}
       </p>
-      <p className="text-sky-300/80 text-sm mb-8">
-        Ubicación: Meliá Internacional · Varadero
-      </p>
+      <p className="text-sky-300/80 text-sm mb-8">{t.cta.location}</p>
 
       <div className="flex flex-col items-center gap-4">
         <a 
@@ -52,7 +47,7 @@ export default function CTASection() {
           rel="noopener noreferrer"
           className="w-full sm:w-auto flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-7 py-3.5 rounded-lg transition-colors text-base"
         >
-          <WhatsAppIcon /> Reservar por WhatsApp
+          <WhatsAppIcon /> {t.cta.book}
         </a>
 
         <div className="flex items-center gap-5">

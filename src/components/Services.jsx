@@ -1,5 +1,6 @@
 import SectionHeader from "./ui/SectionHeader";
-import { SERVICES } from "../data";
+import { SERVICES, SERVICES_EN } from "../data";
+import { useLang } from "../i18n/LangContext";
 
 const icons = [
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -23,11 +24,13 @@ const icons = [
 ];
 
 export default function Services() {
+  const { lang, t } = useLang();
+  const items = lang === "en" ? SERVICES_EN : SERVICES;
   return (
     <section id="servicios" className="py-16 px-4 sm:px-6 max-w-6xl mx-auto">
-      <SectionHeader tag="Lo que ofrecemos" title="Nuestros servicios" />
+      <SectionHeader tag={t.services.tag} title={t.services.title} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {SERVICES.map((s, i) => (
+        {items.map((s, i) => (
           <div key={s.title} className="bg-white border border-neutral-200 rounded-xl p-5 hover:border-neutral-300 transition-colors">
             <div className="w-11 h-11 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 mb-4">
               {icons[i]}

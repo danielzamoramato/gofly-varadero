@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import WhatsAppIcon from "./ui/WhatsAppIcon";
 import { waLink } from "../utils/links";
 import { HERO_SLIDES } from "../data";
+import { useLang } from "../i18n/LangContext";
 
 const ShieldIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -29,19 +30,20 @@ const PinIcon = () => (
   </svg>
 );
 
-const BADGES = [
-  { icon: <ShieldIcon />, label: "Vuelos seguros" },
-  { icon: <VideoIcon />,  label: "Video incluido" },
-  { icon: <UsersIcon />,  label: "Vuelo biplaza" },
-  { icon: <PinIcon />,    label: "Varadero, Cuba" },
-];
-
 export default function HeroSlider() {
+  const { t } = useLang();
   const [current, setCurrent] = useState(0);
 
+  const BADGES = [
+    { icon: <ShieldIcon />, label: t.hero.badge1 },
+    { icon: <VideoIcon />,  label: t.hero.badge2 },
+    { icon: <UsersIcon />,  label: t.hero.badge3 },
+    { icon: <PinIcon />,    label: t.hero.badge4 },
+  ];
+
   useEffect(() => {
-    const t = setInterval(() => setCurrent((c) => (c + 1) % HERO_SLIDES.length), 4500);
-    return () => clearInterval(t);
+    const timer = setInterval(() => setCurrent((c) => (c + 1) % HERO_SLIDES.length), 4500);
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -53,29 +55,28 @@ export default function HeroSlider() {
             i === current ? "opacity-100" : "opacity-0"
           }`}
         >
-        {slide.src && (
-      <img
-        src={slide.src}
-        alt={slide.label}
-        className="w-full h-full object-cover absolute inset-0"
-      />
-    )}
-  </div>
-))}
+          {slide.src && (
+            <img
+              src={slide.src}
+              alt={slide.label}
+              className="w-full h-full object-cover absolute inset-0"
+            />
+          )}
+        </div>
+      ))}
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30" />
 
       <div className="relative z-10 text-center px-5 max-w-3xl mx-auto">
         <p className="text-sky-300 text-xs sm:text-sm font-medium tracking-widest uppercase mb-3">
-          Varadero, Cuba
+          {t.hero.tag}
         </p>
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-medium text-white leading-tight mb-5 drop-shadow-lg">
-          Vuela sobre el <span className="text-sky-300">Caribe</span>
-          <br />en paramotor
+          {t.hero.title1} <span className="text-sky-300">{t.hero.titleHighlight}</span>
+          <br />{t.hero.title2}
         </h1>
         <p className="text-sky-100/80 text-base sm:text-lg mb-8 leading-relaxed drop-shadow">
-          Una experiencia única sobrevolando las playas más hermosas de Cuba.
-          Vuelos biplaza, seguros y memorables.
+          {t.hero.sub}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -85,13 +86,13 @@ export default function HeroSlider() {
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-7 py-3.5 rounded-lg transition-colors text-base w-full sm:w-auto"
           >
-            <WhatsAppIcon /> Reservar por WhatsApp
+            <WhatsAppIcon /> {t.hero.cta}
           </a>
           <button
             onClick={() => document.getElementById("servicios")?.scrollIntoView({ behavior: "smooth" })}
             className="border border-white/40 hover:border-white text-white px-7 py-3.5 rounded-lg transition-colors text-base w-full sm:w-auto"
           >
-            Ver servicios
+            {t.hero.ctaSub}
           </button>
         </div>
 

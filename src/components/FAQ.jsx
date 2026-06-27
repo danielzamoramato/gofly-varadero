@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SectionHeader from "./ui/SectionHeader";
-import { FAQS } from "../data";
+import { FAQS, FAQS_EN } from "../data";
+import { useLang } from "../i18n/LangContext";
 
 const ChevronIcon = ({ open }) => (
   <svg
@@ -13,14 +14,16 @@ const ChevronIcon = ({ open }) => (
 );
 
 export default function FAQ() {
+  const { lang, t } = useLang();
+  const items = lang === "en" ? FAQS_EN : FAQS;
   const [open, setOpen] = useState(null);
 
   return (
     <section id="faq" className="py-16 px-4 sm:px-6 bg-white">
       <div className="max-w-3xl mx-auto">
-        <SectionHeader tag="Preguntas frecuentes" title="Todo lo que necesitas saber" />
+        <SectionHeader tag={t.faq.tag} title={t.faq.title} />
         <div className="space-y-2">
-          {FAQS.map((item, i) => (
+          {items.map((item, i) => (
             <div key={i} className="border border-neutral-200 rounded-lg overflow-hidden">
               <button
                 onClick={() => setOpen(open === i ? null : i)}

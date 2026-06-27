@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import SectionHeader from "./ui/SectionHeader";
 import Modal from "./ui/Modal";
 import { supabase } from "../utils/supabase";
+import { useLang } from "../i18n/LangContext";
 
 const StarIcon = ({ filled, onClick }) => (
   <svg
@@ -24,6 +25,7 @@ const COUNTRIES = [
 const EMPTY_FORM = { name: "", country: "Cuba", rating: 5, text: "" };
 
 function ReviewForm({ onClose }) {
+  const { t } = useLang();
   const [form, setForm]             = useState(EMPTY_FORM);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted]   = useState(false);
@@ -43,7 +45,7 @@ function ReviewForm({ onClose }) {
     }]);
 
     if (error) {
-      setError("Hubo un error al enviar tu reseña. Intenta de nuevo.");
+      setError(t.reviews.error);
     } else {
       setSubmitted(true);
       setForm(EMPTY_FORM);
@@ -59,10 +61,10 @@ function ReviewForm({ onClose }) {
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
-        <p className="font-medium text-neutral-900 mb-1">¡Gracias por tu reseña!</p>
-        <p className="text-sm text-neutral-500 mb-6">La revisaremos y la publicaremos pronto.</p>
+        <p className="font-medium text-neutral-900 mb-1">{t.reviews.successTitle}</p>
+        <p className="text-sm text-neutral-500 mb-6">{t.reviews.successSub}</p>
         <button onClick={onClose} className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium px-6 py-2.5 rounded-lg transition-colors">
-          Cerrar
+          {t.reviews.close}
         </button>
       </div>
     );
@@ -71,18 +73,18 @@ function ReviewForm({ onClose }) {
   return (
     <div className="p-5 sm:p-6">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-lg font-medium text-neutral-900">Deja tu reseña</h3>
+        <h3 className="text-lg font-medium text-neutral-900">{t.reviews.formTitle}</h3>
         <button onClick={onClose} className="text-neutral-400 hover:text-neutral-600 transition-colors p-1">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
-      <p className="text-sm text-neutral-500 mb-5">Tu opinión será visible después de ser revisada.</p>
+      <p className="text-sm text-neutral-500 mb-5">{t.reviews.formSub}</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="text-sm font-medium text-neutral-700 block mb-1">Calificación</label>
+          <label className="text-sm font-medium text-neutral-700 block mb-1">{t.reviews.rating}</label>
           <div className="flex gap-1 text-amber-400">
             {Array.from({ length: 5 }).map((_, i) => (
               <StarIcon key={i} filled={i < form.rating} onClick={() => setForm((f) => ({ ...f, rating: i + 1 }))} />
@@ -90,16 +92,16 @@ function ReviewForm({ onClose }) {
           </div>
         </div>
         <div>
-          <label className="text-sm font-medium text-neutral-700 block mb-1">Nombre</label>
+          <label className="text-sm font-medium text-neutral-700 block mb-1">{t.reviews.name}</label>
           <input
             type="text" required maxLength={60} value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            placeholder="Tu nombre"
+            placeholder={t.reviews.namePlaceholder}
             className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
         <div>
-          <label className="text-sm font-medium text-neutral-700 block mb-1">País</label>
+          <label className="text-sm font-medium text-neutral-700 block mb-1">{t.reviews.country}</label>
           <select
             value={form.country}
             onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))}
@@ -109,11 +111,11 @@ function ReviewForm({ onClose }) {
           </select>
         </div>
         <div>
-          <label className="text-sm font-medium text-neutral-700 block mb-1">Tu experiencia</label>
+          <label className="text-sm font-medium text-neutral-700 block mb-1">{t.reviews.experience}</label>
           <textarea
             required minLength={20} maxLength={500} rows={4} value={form.text}
             onChange={(e) => setForm((f) => ({ ...f, text: e.target.value }))}
-            placeholder="Cuéntanos cómo fue tu vuelo..."
+            placeholder={t.reviews.experiencePlaceholder}
             className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
           />
           <p className="text-xs text-neutral-400 mt-1 text-right">{form.text.length}/500</p>
@@ -123,7 +125,7 @@ function ReviewForm({ onClose }) {
           type="submit" disabled={submitting}
           className="w-full bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white font-medium py-3 rounded-lg text-sm transition-colors"
         >
-          {submitting ? "Enviando..." : "Enviar reseña"}
+          {submitting ? t.reviews.submitting : t.reviews.submit}
         </button>
       </form>
     </div>
@@ -131,8 +133,9 @@ function ReviewForm({ onClose }) {
 }
 
 export default function Reviews() {
-  const [reviews, setReviews]   = useState([]);
-  const [loading, setLoading]   = useState(true);
+  const { t } = useLang();
+  const [reviews, setReviews]     = useState([]);
+  const [loading, setLoading]     = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => { fetchReviews(); }, []);
@@ -149,7 +152,7 @@ export default function Reviews() {
     <section className="py-16 px-4 sm:px-6 bg-neutral-50">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-start justify-between flex-wrap gap-4 mb-10">
-          <SectionHeader tag="Opiniones" title="Lo que dicen nuestros clientes" />
+          <SectionHeader tag={t.reviews.tag} title={t.reviews.title} />
           <button
             onClick={() => setModalOpen(true)}
             className="shrink-0 flex items-center gap-2 border border-teal-500 text-teal-600 hover:bg-teal-50 font-medium px-4 py-2 rounded-lg text-sm transition-colors"
@@ -157,16 +160,14 @@ export default function Reviews() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Añadir reseña
+            {t.reviews.add}
           </button>
         </div>
 
         {loading ? (
-          <div className="text-center text-neutral-400 py-12 text-sm">Cargando reseñas...</div>
+          <div className="text-center text-neutral-400 py-12 text-sm">{t.reviews.loading}</div>
         ) : reviews.length === 0 ? (
-          <div className="text-center text-neutral-400 py-12 text-sm">
-            Aún no hay reseñas aprobadas. ¡Sé el primero!
-          </div>
+          <div className="text-center text-neutral-400 py-12 text-sm">{t.reviews.empty}</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {reviews.map((r) => (

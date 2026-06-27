@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import WhatsAppIcon from "./ui/WhatsAppIcon";
 import { waLink } from "../utils/links";
+import { useLang } from "../i18n/LangContext";
 
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { lang, setLang, t }   = useLang();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -18,10 +20,10 @@ export default function NavBar() {
   }
 
   const NAV_LINKS = [
-    { id: "servicios", label: "Servicios" },
-    { id: "precios",   label: "Precios" },
-    { id: "galeria",   label: "Galería" },
-    { id: "faq",       label: "FAQ" },
+    { id: "servicios", label: t.nav.services },
+    { id: "precios",   label: t.nav.pricing },
+    { id: "galeria",   label: t.nav.gallery },
+    { id: "faq",       label: t.nav.faq },
   ];
 
   return (
@@ -29,9 +31,8 @@ export default function NavBar() {
       scrolled || menuOpen ? "bg-sky-950/95 backdrop-blur shadow-lg" : "bg-transparent"
     }`}>
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <span className="text-white font-medium text-lg">Go Fly Varadero</span>
+        <span className="text-white font-medium text-lg">{t.nav.brand}</span>
 
-        {/* Desktop links */}
         <div className="hidden md:flex items-center gap-6 text-sm text-sky-200">
           {NAV_LINKS.map(({ id, label }) => (
             <button key={id} onClick={() => scrollToSection(id)} className="hover:text-white transition-colors">
@@ -40,9 +41,35 @@ export default function NavBar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center bg-white/10 rounded-lg p-0.5 text-xs font-medium">
+            <button
+              onClick={() => setLang("es")}
+              className={`px-2.5 py-1 rounded-md transition-colors ${
+                lang === "es" ? "bg-white text-sky-900" : "text-white/70 hover:text-white"
+              }`}
+            >
+              ES
+            </button>
+            <button
+              onClick={() => setLang("en")}
+              className={`px-2.5 py-1 rounded-md transition-colors ${
+                lang === "en" ? "bg-white text-sky-900" : "text-white/70 hover:text-white"
+              }`}
+            >
+              EN
+            </button>
+          </div>
 
-          {/* Hamburger */}
+          <a 
+            href={waLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          >
+            <WhatsAppIcon /> {t.nav.book}
+          </a>
+
           <button
             onClick={() => setMenuOpen((o) => !o)}
             className="md:hidden text-white p-1"
@@ -61,7 +88,6 @@ export default function NavBar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden border-t border-sky-800/50 px-6 py-4 flex flex-col gap-1">
           {NAV_LINKS.map(({ id, label }) => (
@@ -79,7 +105,7 @@ export default function NavBar() {
             rel="noopener noreferrer"
             className="mt-3 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-3 rounded-lg transition-colors"
           >
-            <WhatsAppIcon /> Reservar ahora
+            <WhatsAppIcon /> {t.nav.book}
           </a>
         </div>
       )}

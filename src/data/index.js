@@ -1,7 +1,7 @@
 export const HERO_SLIDES = [
-  { id: 1, bg: "from-sky-900 via-sky-800 to-blue-900", label: "Vista aérea · Varadero", src: "/images/hero1.jpg" },
-  { id: 2, bg: "from-teal-900 via-sky-800 to-blue-900", label: "Playa desde las alturas", src: "/images/hero2.jpg" },
-  { id: 3, bg: "from-blue-950 via-sky-900 to-teal-900", label: "Atardecer en vuelo", src: "/images/hero3.jpeg" },
+  { id: 1, bg: "from-sky-900 via-sky-800 to-blue-900", src: "/images/hero1.jpg" },
+  { id: 2, bg: "from-teal-900 via-sky-800 to-blue-900", src: "/images/hero2.jpg" },
+  { id: 3, bg: "from-blue-950 via-sky-900 to-teal-900", src: "/images/hero3.jpeg" },
 ];
 
 export const SERVICES = [
@@ -149,5 +149,100 @@ export const FAQS = [
   {
     q: "¿Qué pasa si el clima no es bueno?",
     a: "Dependemos de las condiciones meteorológicas. Si no es posible volar, reprogramamos sin costo adicional.",
+  },
+];
+
+export const SERVICES_EN = [
+  {
+    title: "Paramotor flight",
+    desc: "We fly over Varadero's beaches with panoramic views of the Caribbean Sea. No runway needed.",
+    price: "From $80 USD",
+    priceNote: "/ per person",
+    badge: "Video included",
+  },
+  {
+    title: "Flight video & photos",
+    desc: "All packages include a professional souvenir video. We capture every moment from above.",
+    price: "Included",
+    priceNote: "/ in all packages",
+    badge: null,
+  },
+  {
+    title: "Transport",
+    desc: "Pick-up and drop-off service at the agreed location within Varadero, up to 5 people.",
+    price: "5,000 MN",
+    priceNote: "/ round trip",
+    badge: null,
+  },
+  {
+    title: "Couple's flight",
+    desc: "Experience the most romantic flight over the Caribbean together. Two consecutive flights with video.",
+    price: "$200 USD",
+    priceNote: "/ per couple",
+    badge: "Special",
+  },
+];
+
+export const FAQS_EN = [
+  { q: "Do I need prior experience to fly?", a: "Not at all! Our flights are tandem with a certified pilot. All you need is the desire to experience it." },
+  { q: "How long is the flight?", a: "It depends on the package: Basic 10 min, Standard 15–17 min, Luxury 20–25 min. All include video." },
+  { q: "Is it safe?", a: "Safety is our top priority. We have certified pilots and regularly inspected equipment. We don't fly if weather conditions are not optimal." },
+  { q: "What is the weight limit?", a: "The weight limit depends on wind intensity. We normally accept up to 140 kg. Minimum age is 7 years." },
+  { q: "Where is the departure point?", a: "We operate from the Meliá Internacional hotel in Varadero. The exact flight zone depends on wind direction on your booking day." },
+  { q: "Do you offer transport?", a: "Yes. Pick-up and drop-off service costs 5,000 MN for groups of up to 5 people within Varadero." },
+  { q: "What information do you need to book?", a: "Date, time, hotel, room number, full name and number of flights. Message us on WhatsApp and our car will pick you up at the agreed location." },
+  { q: "What if the weather is bad on my flight day?", a: "We depend on weather conditions. If flying is not possible, we reschedule at no extra cost." },
+];
+
+export const PLANS_EN = [
+  {
+    name: "Basic",
+    price: "$80",
+    unit: "USD per person",
+    duration: "10 min + video",
+    featured: false,
+    badge: null,
+    waMsg: "Hi! I'm interested in the Basic package (10 min) at Go Fly Varadero.",
+    features: ["10 minute flight", "Souvenir video", "Certified pilot", "Safety equipment"],
+  },
+  {
+    name: "Standard",
+    price: "$100",
+    unit: "USD per person",
+    duration: "15–17 min + video",
+    featured: false,
+    badge: null,
+    waMsg: "Hi! I'm interested in the Standard package (15-17 min) at Go Fly Varadero.",
+    features: ["15–17 minute flight", "Souvenir video", "Certified pilot", "Safety equipment"],
+  },
+  {
+    name: "Luxury",
+    price: "$140",
+    unit: "USD per person",
+    duration: "20–25 min + video",
+    featured: true,
+    badge: "Most popular",
+    waMsg: "Hi! I'm interested in the Luxury package (20-25 min) at Go Fly Varadero.",
+    features: ["20–25 minute flight", "Souvenir video", "Certified pilot", "Safety equipment"],
+  },
+  {
+    name: "Couple",
+    price: "$200",
+    unit: "USD per couple",
+    duration: "20 min + video each",
+    featured: false,
+    badge: "Special",
+    waMsg: "Hi! I'm interested in the Couple package (20 min) at Go Fly Varadero.",
+    features: ["2 x 20 minute flights", "2 souvenir videos", "Certified pilot", "Safety equipment"],
+  },
+  {
+    name: "Nationals",
+    price: "$65",
+    unit: "USD equivalent",
+    duration: "10 min + video",
+    featured: false,
+    badge: null,
+    waMsg: "Hi! I'm interested in the Nationals flight at Go Fly Varadero.",
+    features: ["10 minute flight", "Souvenir video", "Certified pilot", "Safety equipment"],
   },
 ];
