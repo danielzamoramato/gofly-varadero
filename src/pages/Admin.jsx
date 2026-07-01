@@ -128,13 +128,7 @@ function GalleryManager() {
             <line x1="12" y1="3" x2="12" y2="15" />
           </svg>
           {uploading ? "Subiendo..." : "Subir fotos / videos"}
-          <input
-            type="file"
-            multiple
-            accept="image/*,video/*"
-            className="hidden"
-            onChange={handleUpload}
-          />
+          <input type="file" multiple accept="image/*,video/*" className="hidden" onChange={handleUpload} />
         </label>
       </div>
 
@@ -177,8 +171,162 @@ function GalleryManager() {
   );
 }
 
+function BookingsManager() {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [filter, setFilter]     = useState("upcoming"); // upcoming | past | all
+
+  useEffect(() => { fetchBookings(); }, [filter]);
+
+  async function fetchBookings() {
+    setLoading(true);
+    const today = new Date().toISOString().split("T")[0];
+
+    let query = supabase
+      .from("bookings")
+      .select("*")
+      .order("date", { ascending: true })
+      .order("time", { ascending: true });
+
+    if (filter === "upcoming") query = query.gte("date", today);
+    if (filter === "past")     query = query.lt("date", today);
+
+    const { data } = await query;
+    setBookings(data || []);
+    setLoading(false);
+  }
+
+  async function handleDelete(id) {
+    if (!confirm("¿Eliminar esta reserva?")) return;
+    await supabase.from("bookings").delete().eq("id", id);
+    setBookings((prev) => prev.filter((b) => b.id !== id));
+  }
+
+  function formatDate(d) {
+    return new Date(d + "T00:00:00").toLocaleDateString("es-ES", {
+      weekday: "short", day: "numeric", month: "short", year: "numeric",
+    });
+  }
+
+  function formatTime(t) {
+    return t.slice(0, 5);
+  }
+
+  // Agrupar por fecha
+  const grouped = bookings.reduce((acc, b) => {
+    if (!acc[b.date]) acc[b.date] = [];
+    acc[b.date].push(b);
+    return acc;
+  }, {});
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <h2 className="font-medium text-neutral-900">Reservas</h2>
+        <div className="flex gap-2">
+          {[
+            { id: "upcoming", label: "Próximas" },
+            { id: "past",     label: "Pasadas" },
+            { id: "all",      label: "Todas" },
+          ].map((f) => (
+            <button
+              key={f.id}
+              onClick={() => setFilter(f.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                filter === f.id
+                  ? "bg-teal-600 text-white"
+                  : "bg-white border border-neutral-200 text-neutral-600 hover:border-neutral-300"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {loading ? (
+        <p className="text-sm text-neutral-400 py-8 text-center">Cargando...</p>
+      ) : bookings.length === 0 ? (
+        <p className="text-sm text-neutral-400 py-8 text-center">No hay reservas {filter === "upcoming" ? "próximas" : filter === "past" ? "pasadas" : ""}.</p>
+      ) : (
+        <div className="space-y-6">
+          {Object.entries(grouped).map(([date, items]) => (
+            <div key={date}>
+              {/* Fecha header */}
+              <div className="flex items-center gap-3 mb-3">
+                <p className="text-sm font-medium text-neutral-900">{formatDate(date)}</p>
+                <span className="text-xs bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">
+                  {items.length} reserva{items.length !== 1 ? "s" : ""}
+                </span>
+                {items.length >= 2 && (
+                  <span className="text-xs bg-red-50 text-red-500 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="12" />
+                      <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    Día lleno
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                {items.map((b) => (
+                  <div key={b.id} className="bg-white border border-neutral-200 rounded-xl p-4">
+                    <div className="flex items-start justify-between gap-4 flex-wrap">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                          <span className="text-sm font-medium text-neutral-900">{b.full_name}</span>
+                          <span className="text-xs text-neutral-400">·</span>
+                          <span className="text-xs text-neutral-500">{b.document_id}</span>
+                          <span className="text-xs bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full font-medium">
+                            {b.plan_name}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 text-xs text-neutral-500 flex-wrap">
+                          <span className="flex items-center gap-1">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            {formatTime(b.time)}
+                          </span>
+                          {b.pickup && (
+                            <span className="flex items-center gap-1 text-sky-600">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                              </svg>
+                              Recogida: {b.pickup_location}
+                            </span>
+                          )}
+                          <span className="text-neutral-300">
+                            {new Date(b.created_at).toLocaleDateString("es-ES")}
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleDelete(b.id)}
+                        className="flex items-center gap-1.5 bg-white hover:bg-red-50 text-red-500 border border-red-200 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors shrink-0"
+                      >
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Dashboard() {
-  const [tab, setTab]         = useState("reviews");
+  const [tab, setTab]         = useState("bookings");
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter]   = useState("pending");
@@ -211,6 +359,12 @@ function Dashboard() {
     window.location.reload();
   }
 
+  const TABS = [
+    { id: "bookings", label: "Reservas" },
+    { id: "reviews",  label: "Reseñas" },
+    { id: "gallery",  label: "Galería" },
+  ];
+
   return (
     <div className="min-h-screen bg-neutral-50">
       <div className="bg-white border-b border-neutral-200 px-6 py-4 flex items-center justify-between">
@@ -233,10 +387,7 @@ function Dashboard() {
 
       <div className="bg-white border-b border-neutral-200 px-6">
         <div className="flex gap-0">
-          {[
-            { id: "reviews", label: "Reseñas" },
-            { id: "gallery", label: "Galería" },
-          ].map((t) => (
+          {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
@@ -255,6 +406,8 @@ function Dashboard() {
       <div className="max-w-4xl mx-auto px-6 py-8">
         {tab === "gallery" ? (
           <GalleryManager />
+        ) : tab === "bookings" ? (
+          <BookingsManager />
         ) : (
           <>
             <div className="flex gap-2 mb-6">

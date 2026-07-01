@@ -1,5 +1,7 @@
+import { useState } from "react";
 import SectionHeader from "./ui/SectionHeader";
 import WhatsAppIcon from "./ui/WhatsAppIcon";
+import BookingModal from "./ui/BookingModal";
 import { PLANS, PLANS_EN } from "../data";
 import { waLink } from "../utils/links";
 import { useLang } from "../i18n/LangContext";
@@ -19,6 +21,7 @@ const ClockIcon = () => (
 export default function Pricing() {
   const { t, lang } = useLang();
   const plans = lang === "en" ? PLANS_EN : PLANS;
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   return (
     <section id="precios" className="py-16 px-4 sm:px-6 bg-neutral-50">
@@ -50,10 +53,8 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
-              <a 
-                href={waLink(p.waMsg)}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => setSelectedPlan(p)}
                 className={`w-full text-center py-2 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${
                   p.featured
                     ? "bg-teal-600 hover:bg-teal-700 text-white"
@@ -61,11 +62,16 @@ export default function Pricing() {
                 }`}
               >
                 <WhatsAppIcon size={13} /> {t.pricing.book}
-              </a>
+              </button>
             </div>
           ))}
         </div>
       </div>
+
+      <BookingModal
+        plan={selectedPlan}
+        onClose={() => setSelectedPlan(null)}
+      />
     </section>
   );
 }
