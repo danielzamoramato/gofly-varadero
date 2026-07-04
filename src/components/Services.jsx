@@ -26,30 +26,47 @@ const icons = [
 export default function Services() {
   const { lang, t } = useLang();
   const items = lang === "en" ? SERVICES_EN : SERVICES;
+
   return (
-    <section id="servicios" className="py-16 px-4 sm:px-6 max-w-6xl mx-auto">
-      <SectionHeader tag={t.services.tag} title={t.services.title} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {items.map((s, i) => (
-          <div key={s.title} className="bg-white border border-neutral-200 rounded-xl p-5 hover:border-neutral-300 transition-colors">
-            <div className="w-11 h-11 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 mb-4">
-              {icons[i]}
+    <section
+      id="servicios"
+      className="py-16 px-4 sm:px-6 relative overflow-hidden"
+      style={{
+        backgroundImage: "url('/images/services-bg.jpeg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Overlay semitransparente */}
+      <div className="absolute inset-0 bg-sky-950/50" />
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        <SectionHeader tag={t.services.tag} title={t.services.title} light />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {items.map((s, i) => (
+            <div
+              key={s.title}
+              className="bg-white/90 backdrop-blur-sm border border-white/60 rounded-xl p-5 hover:bg-white transition-colors"
+            >
+              <div className="w-11 h-11 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600 mb-4">
+                {icons[i]}
+              </div>
+              <h3 className="font-medium text-neutral-900 mb-2">{s.title}</h3>
+              <p className="text-sm text-neutral-500 leading-relaxed mb-4">{s.desc}</p>
+              {s.price && (
+                <p className="text-xl font-medium text-teal-600">
+                  {s.price}{" "}
+                  <span className="text-sm font-normal text-neutral-400">{s.priceNote}</span>
+                </p>
+              )}
+              {s.badge && (
+                <span className="inline-block mt-2 text-xs font-medium bg-teal-50 text-teal-700 px-3 py-1 rounded-md">
+                  {s.badge}
+                </span>
+              )}
             </div>
-            <h3 className="font-medium text-neutral-900 mb-2">{s.title}</h3>
-            <p className="text-sm text-neutral-500 leading-relaxed mb-4">{s.desc}</p>
-            {s.price && (
-              <p className="text-xl font-medium text-teal-600">
-                {s.price}{" "}
-                <span className="text-sm font-normal text-neutral-400">{s.priceNote}</span>
-              </p>
-            )}
-            {s.badge && (
-              <span className="inline-block mt-2 text-xs font-medium bg-teal-50 text-teal-700 px-3 py-1 rounded-md">
-                {s.badge}
-              </span>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

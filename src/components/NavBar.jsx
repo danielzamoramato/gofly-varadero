@@ -31,7 +31,14 @@ export default function NavBar() {
       scrolled || menuOpen ? "bg-sky-950/95 backdrop-blur shadow-lg" : "bg-transparent"
     }`}>
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <span className="text-white font-medium text-lg">{t.nav.brand}</span>
+       <div className="flex items-center gap-2">
+  <img
+    src="logo.png"
+    alt="Go Fly Varadero"
+    className="w-8 h-8 object-contain"
+  />
+  <span className="text-white font-medium text-lg">{t.nav.brand}</span>
+</div>
 
         <div className="hidden md:flex items-center gap-6 text-sm text-sky-200">
           {NAV_LINKS.map(({ id, label }) => (

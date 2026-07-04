@@ -53,6 +53,36 @@ function Login({ onLogin }) {
 }
 
 function GalleryManager() {
+  const [section, setSection] = useState("gallery"); // "gallery" | "hero"
+
+  return (
+    <div>
+      {/* Sub-tabs */}
+      <div className="flex gap-2 mb-6">
+        {[
+          { id: "gallery", label: "Galería pública" },
+          { id: "hero",    label: "Imágenes del Hero" },
+        ].map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setSection(s.id)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              section === s.id
+                ? "bg-teal-600 text-white"
+                : "bg-white border border-neutral-200 text-neutral-600 hover:border-neutral-300"
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      {section === "gallery" ? <GalleryGrid /> : <HeroGrid />}
+    </div>
+  );
+}
+
+function GalleryGrid() {
   const [items, setItems]         = useState([]);
   const [loading, setLoading]     = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -82,15 +112,10 @@ function GalleryManager() {
       const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
       const isVideo = file.type.startsWith("video/");
 
-      const { error: uploadError } = await supabase.storage
-        .from(BUCKET)
-        .upload(path, file);
-
+      const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file);
       if (uploadError) { setError("Error subiendo " + file.name); continue; }
 
-      const { data: { publicUrl } } = supabase.storage
-        .from(BUCKET)
-        .getPublicUrl(path);
+      const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(path);
 
       await supabase.from("gallery_items").insert([{
         url:      publicUrl,
@@ -120,7 +145,7 @@ function GalleryManager() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-medium text-neutral-900">Galería</h2>
+        <h2 className="font-medium text-neutral-900">Galería pública</h2>
         <label className={`flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -137,7 +162,7 @@ function GalleryManager() {
       {loading ? (
         <p className="text-sm text-neutral-400 py-8 text-center">Cargando...</p>
       ) : items.length === 0 ? (
-        <p className="text-sm text-neutral-400 py-8 text-center">No hay fotos aún. Sube la primera.</p>
+        <p className="text-sm text-neutral-400 py-8 text-center">No hay fotos aún.</p>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {items.map((item) => (
@@ -157,6 +182,120 @@ function GalleryManager() {
               </div>
               <button
                 onClick={() => handleDelete(item)}
+                className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 hover:bg-red-50 border border-neutral-200 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-red-500">
+                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function HeroGrid() {
+  const [slides, setSlides]       = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError]         = useState(null);
+
+  const BUCKET = "gallery go-fly";
+
+  useEffect(() => { fetchSlides(); }, []);
+
+  async function fetchSlides() {
+    const { data } = await supabase
+      .from("hero_slides")
+      .select("*")
+      .order("position", { ascending: true });
+    setSlides(data || []);
+    setLoading(false);
+  }
+
+  async function handleUpload(e) {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setUploading(true);
+    setError(null);
+
+    for (const file of files) {
+      const ext  = file.name.split(".").pop();
+      const path = `hero-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file);
+      if (uploadError) { setError("Error subiendo " + file.name); continue; }
+
+      const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(path);
+
+      await supabase.from("hero_slides").insert([{
+        url:      publicUrl,
+        label:    file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " "),
+        position: slides.length,
+      }]);
+    }
+
+    await fetchSlides();
+    setUploading(false);
+    e.target.value = "";
+  }
+
+  async function handleDelete(slide) {
+    if (!confirm(`¿Eliminar esta imagen del hero?`)) return;
+    const path = slide.url.split(`/${BUCKET}/`)[1];
+    await supabase.storage.from(BUCKET).remove([path]);
+    await supabase.from("hero_slides").delete().eq("id", slide.id);
+    setSlides((prev) => prev.filter((s) => s.id !== slide.id));
+  }
+
+  async function updateLabel(id, label) {
+    await supabase.from("hero_slides").update({ label }).eq("id", id);
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="font-medium text-neutral-900">Imágenes del Hero</h2>
+        <label className={`flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          {uploading ? "Subiendo..." : "Subir imágenes"}
+          <input type="file" multiple accept="image/*" className="hidden" onChange={handleUpload} />
+        </label>
+      </div>
+      <p className="text-xs text-neutral-400 mb-4">Se mostrarán en rotación en la pantalla principal. Recomendado: fotos horizontales de alta resolución.</p>
+
+      {error && <p className="text-sm text-red-500 mb-3">{error}</p>}
+
+      {loading ? (
+        <p className="text-sm text-neutral-400 py-8 text-center">Cargando...</p>
+      ) : slides.length === 0 ? (
+        <p className="text-sm text-neutral-400 py-8 text-center">No hay imágenes del hero aún. Sube la primera.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {slides.map((slide, i) => (
+            <div key={slide.id} className="group relative border border-neutral-200 rounded-xl overflow-hidden bg-neutral-50">
+              <div className="relative">
+                <img src={slide.url} alt={slide.label} className="w-full h-40 object-cover" />
+                <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-0.5 rounded-full">
+                  #{i + 1}
+                </div>
+              </div>
+              <div className="p-2">
+                <input
+                  defaultValue={slide.label}
+                  onBlur={(e) => updateLabel(slide.id, e.target.value)}
+                  className="w-full text-xs text-neutral-700 border border-transparent hover:border-neutral-200 focus:border-teal-400 rounded px-1 py-0.5 focus:outline-none"
+                  placeholder="Etiqueta (opcional)"
+                />
+              </div>
+              <button
+                onClick={() => handleDelete(slide)}
                 className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 hover:bg-red-50 border border-neutral-200 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-red-500">

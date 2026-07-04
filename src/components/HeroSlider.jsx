@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import WhatsAppIcon from "./ui/WhatsAppIcon";
 import { waLink } from "../utils/links";
-import { HERO_SLIDES } from "../data";
+import { supabase } from "../utils/supabase";
 import { useLang } from "../i18n/LangContext";
 
 const ShieldIcon = () => (
@@ -30,8 +30,16 @@ const PinIcon = () => (
   </svg>
 );
 
+// Gradientes de fallback mientras cargan o si no hay slides
+const FALLBACK_BGS = [
+  "from-sky-900 via-sky-800 to-blue-900",
+  "from-teal-900 via-sky-800 to-blue-900",
+  "from-blue-950 via-sky-900 to-teal-900",
+];
+
 export default function HeroSlider() {
   const { t } = useLang();
+  const [slides, setSlides] = useState([]);
   const [current, setCurrent] = useState(0);
 
   const BADGES = [
@@ -42,22 +50,38 @@ export default function HeroSlider() {
   ];
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrent((c) => (c + 1) % HERO_SLIDES.length), 4500);
-    return () => clearInterval(timer);
+    async function fetchSlides() {
+      const { data } = await supabase
+        .from("hero_slides")
+        .select("*")
+        .order("position", { ascending: true });
+      if (data && data.length > 0) setSlides(data);
+    }
+    fetchSlides();
   }, []);
+
+  useEffect(() => {
+    if (slides.length === 0) return;
+    const timer = setInterval(() => setCurrent((c) => (c + 1) % slides.length), 4500);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  const displaySlides = slides.length > 0
+    ? slides
+    : [{ id: "fallback", url: null, label: "" }];
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {HERO_SLIDES.map((slide, i) => (
+      {displaySlides.map((slide, i) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 bg-gradient-to-br ${slide.bg} transition-opacity duration-1000 ${
+          className={`absolute inset-0 bg-gradient-to-br ${FALLBACK_BGS[i % FALLBACK_BGS.length]} transition-opacity duration-1000 ${
             i === current ? "opacity-100" : "opacity-0"
           }`}
         >
-          {slide.src && (
+          {slide.url && (
             <img
-              src={slide.src}
+              src={slide.url}
               alt={slide.label}
               className="w-full h-full object-cover absolute inset-0"
             />
@@ -68,9 +92,11 @@ export default function HeroSlider() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30" />
 
       <div className="relative z-10 text-center px-5 max-w-3xl mx-auto">
-        <p className="text-sky-300 text-xs sm:text-sm font-medium tracking-widest uppercase mb-3">
-          {t.hero.tag}
-        </p>
+        <img
+          src="logo.png"
+          alt="Logo"
+          className="w-24 h-24 sm:w-32 sm:h-32 object-contain mx-auto mb-6 drop-shadow-lg"
+        />
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-medium text-white leading-tight mb-5 drop-shadow-lg">
           {t.hero.title1} <span className="text-sky-300">{t.hero.titleHighlight}</span>
           <br />{t.hero.title2}
@@ -105,21 +131,25 @@ export default function HeroSlider() {
         </div>
       </div>
 
-      <div className="absolute bottom-8 flex gap-2 z-10">
-        {HERO_SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrent(i)}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === current ? "w-8 bg-white" : "w-2 bg-white/40"
-            }`}
-          />
-        ))}
-      </div>
+      {slides.length > 1 && (
+        <div className="absolute bottom-8 flex gap-2 z-10">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === current ? "w-8 bg-white" : "w-2 bg-white/40"
+              }`}
+            />
+          ))}
+        </div>
+      )}
 
-      <div className="absolute bottom-8 right-4 text-sky-300/60 text-xs z-10 hidden sm:block">
-        {HERO_SLIDES[current].label}
-      </div>
+      {slides.length > 0 && (
+        <div className="absolute bottom-8 right-4 text-sky-300/60 text-xs z-10 hidden sm:block">
+          {slides[current]?.label}
+        </div>
+      )}
 
       <div className="absolute bottom-14 left-1/2 -translate-x-1/2 text-white/30 animate-bounce z-10">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
