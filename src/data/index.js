@@ -1,7 +1,7 @@
 export const SERVICES = [
   {
     title: "Vuelo en paramotor",
-    desc: "Sobrevolamos las playas de Varadero con vistas panorámicas al mar Caribe. Sin necesidad de pista de despegue. Salida desde el Meliá Internacional.",
+    desc: "Sobrevolamos las playas de Varadero con vistas panorámicas al mar Caribe. Sin necesidad de pista de despegue. Salida desde el Meliá Internacional y volamos a sus alrededores.",
     priceNote: "/ por persona",
   },
   {
