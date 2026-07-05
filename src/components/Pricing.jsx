@@ -3,7 +3,6 @@ import SectionHeader from "./ui/SectionHeader";
 import WhatsAppIcon from "./ui/WhatsAppIcon";
 import BookingModal from "./ui/BookingModal";
 import { PLANS, PLANS_EN } from "../data";
-import { waLink } from "../utils/links";
 import { useLang } from "../i18n/LangContext";
 
 const CheckIcon = () => (

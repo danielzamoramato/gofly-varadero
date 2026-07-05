@@ -9,6 +9,7 @@ const MAX_PER_SLOT = 2;
 const EMPTY = {
   name: "",
   id: "",
+  tel: "",
   date: "",
   time: "",
   people: 1,
@@ -68,6 +69,7 @@ export default function BookingModal({ plan, onClose }) {
       plan_name:       plan.name,
       full_name:       form.name,
       document_id:     form.id,
+      tel:             form.tel,
       date:            form.date,
       time:            form.time,
       people:          form.people,
@@ -89,6 +91,7 @@ export default function BookingModal({ plan, onClose }) {
           `*Package:* ${plan.name} (${plan.price} ${plan.unit})`,
           `*Full name:* ${form.name}`,
           `*ID / Passport:* ${form.id}`,
+          `*Phone Number:* ${form.tel}`,
           `*Date:* ${form.date}`,
           `*Time:* ${form.time}`,
           `*People:* ${form.people}`,
@@ -102,6 +105,7 @@ export default function BookingModal({ plan, onClose }) {
           `*Paquete:* ${plan.name} (${plan.price} ${plan.unit})`,
           `*Nombre completo:* ${form.name}`,
           `*CI / ID:* ${form.id}`,
+          `*Número de Teléfono:* ${form.tel}`,
           `*Fecha:* ${form.date}`,
           `*Hora:* ${form.time}`,
           `*Personas:* ${form.people}`,
@@ -113,7 +117,7 @@ export default function BookingModal({ plan, onClose }) {
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
   }
 
-  const isValid = form.name && form.id && form.date && form.time &&
+  const isValid = form.name && form.id && form.tel && form.date && form.time &&
     (!form.pickup || form.pickupLocation) && !slotFull;
 
   const ui = lang === "en" ? {
@@ -121,6 +125,7 @@ export default function BookingModal({ plan, onClose }) {
     subtitle: (p) => `${p.name} · ${p.price} ${p.unit} · ${p.duration}`,
     name: "Full name", namePh: "Your full name",
     id: "ID / Passport", idPh: "Document number",
+    tel: "Phone number", telPh: "+1xxxxxxxxxx",
     date: "Date", time: "Time",
     pickupLabel: "I need pick-up within Varadero",
     pickupWhere: "Pick-up location", pickupWherePh: "Hotel name or address",
@@ -137,6 +142,7 @@ export default function BookingModal({ plan, onClose }) {
     subtitle: (p) => `${p.name} · ${p.price} ${p.unit} · ${p.duration}`,
     name: "Nombre completo", namePh: "Tu nombre completo",
     id: "CI / ID", idPh: "Número de documento",
+    tel: "Número de teléfono", telPh: "+53xxxxxxxx", 
     date: "Fecha", time: "Hora",
     pickupLabel: "Necesito recogida dentro de Varadero",
     pickupWhere: "Lugar de recogida", pickupWherePh: "Nombre del hotel o dirección",
@@ -213,6 +219,18 @@ export default function BookingModal({ plan, onClose }) {
                 className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
+
+             <div>
+              <label className="text-sm font-medium text-neutral-700 block mb-1">{ui.tel}</label>
+              <input
+                type="tel" required maxLength={11}
+                value={form.tel}
+                onChange={(e) => set("tel", e.target.value)}
+                placeholder={ui.telPh}
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
+
             <div>
               <label className="text-sm font-medium text-neutral-700 block mb-1">
                  {lang === "en" ? "Number of people" : "Cantidad de personas"}
