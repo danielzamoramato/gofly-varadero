@@ -18,7 +18,7 @@ export const t = {
       ctaSub: "Ver servicios",
       badge1: "Vuelos seguros",
       badge2: "Video incluido",
-      badge3: "Vuelo biplaza",
+      badge3: "Vuelos en parejas",
       badge4: "Varadero, Cuba",
     },
     services: {
@@ -28,7 +28,7 @@ export const t = {
     pricing: {
       tag: "Tarifas",
       title: "Precios transparentes",
-      sub: "Sin costos ocultos. Todos los paquetes incluyen video de recuerdo.",
+      sub: "Sin costos ocultos. Todos los paquetes incluyen video de recuerdo. Todos los paquetes se cobran antes de cada vuelo",
       book: "Reservar",
       swipe: "Desliza para ver todos los planes",
     },
@@ -106,7 +106,7 @@ export const t = {
     pricing: {
       tag: "Rates",
       title: "Transparent pricing",
-      sub: "No hidden fees. All packages include a souvenir video.",
+      sub: "No hidden fees. All packages include a souvenir video. All packages are charged before each flight.",
       book: "Book",
       swipe: "Swipe to see all plans",
     },

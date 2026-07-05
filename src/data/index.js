@@ -1,9 +1,3 @@
-export const HERO_SLIDES = [
-  { id: 1, bg: "from-sky-900 via-sky-800 to-blue-900", src: "/images/hero1.jpg" },
-  { id: 2, bg: "from-teal-900 via-sky-800 to-blue-900", src: "/images/hero2.jpg" },
-  { id: 3, bg: "from-blue-950 via-sky-900 to-teal-900", src: "/images/hero3.jpeg" },
-];
-
 export const SERVICES = [
   {
     title: "Vuelo en paramotor",
@@ -32,6 +26,12 @@ export const SERVICES = [
     price: "$200 USD",
     priceNote: "/ por pareja",
     badge: "Especial pareja",
+  },{
+    title: "Instrucciones de vuelo",
+    desc: "Nos aseguramos de impartir los fundamentos básicos de vuelo para garantizar la seguridad de cada cliente.",
+    price: "Incluido",
+    priceNote: "/ en todos los paquetes",
+    badge: null,
   },
 ];
 

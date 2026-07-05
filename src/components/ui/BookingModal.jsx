@@ -11,6 +11,7 @@ const EMPTY = {
   id: "",
   date: "",
   time: "",
+  people: 1,
   pickup: false,
   pickupLocation: "",
 };
@@ -69,6 +70,7 @@ export default function BookingModal({ plan, onClose }) {
       document_id:     form.id,
       date:            form.date,
       time:            form.time,
+      people:          form.people,
       pickup:          form.pickup,
       pickup_location: form.pickup ? form.pickupLocation : null,
     }]);
@@ -89,6 +91,7 @@ export default function BookingModal({ plan, onClose }) {
           `*ID / Passport:* ${form.id}`,
           `*Date:* ${form.date}`,
           `*Time:* ${form.time}`,
+          `*People:* ${form.people}`,
           form.pickup
             ? `*Pick-up:* Yes — ${form.pickupLocation}`
             : `*Pick-up:* Not needed`,
@@ -101,6 +104,7 @@ export default function BookingModal({ plan, onClose }) {
           `*CI / ID:* ${form.id}`,
           `*Fecha:* ${form.date}`,
           `*Hora:* ${form.time}`,
+          `*Personas:* ${form.people}`,
           form.pickup
             ? `*Recogida:* Sí — ${form.pickupLocation}`
             : `*Recogida:* No necesaria`,
@@ -209,7 +213,20 @@ export default function BookingModal({ plan, onClose }) {
                 className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
-
+            <div>
+              <label className="text-sm font-medium text-neutral-700 block mb-1">
+                 {lang === "en" ? "Number of people" : "Cantidad de personas"}
+              </label>
+                <input
+                  type="number"
+                  required
+                  min={1}
+                  max={10}
+                  value={form.people}
+                  onChange={(e) => set("people", parseInt(e.target.value) || 1)}
+                  className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+              </div>
             {/* Date + Time */}
             <div className="grid grid-cols-2 gap-3">
               <div>
