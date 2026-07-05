@@ -95,6 +95,7 @@ export default function BookingModal({ plan, onClose }) {
           `*Date:* ${form.date}`,
           `*Time:* ${form.time}`,
           `*People:* ${form.people}`,
+          `*Total:* ${plan.price} ${plan.unit}${form.pickup ? " + 5,000 MN (pick-up)" : ""}`,
           form.pickup
             ? `*Pick-up:* Yes — ${form.pickupLocation}`
             : `*Pick-up:* Not needed`,
@@ -109,10 +110,21 @@ export default function BookingModal({ plan, onClose }) {
           `*Fecha:* ${form.date}`,
           `*Hora:* ${form.time}`,
           `*Personas:* ${form.people}`,
+          `*Total:* ${plan.price} ${plan.unit}${form.pickup ? " + 5,000 MN (transporte)" : ""}`,
           form.pickup
             ? `*Recogida:* Sí — ${form.pickupLocation}`
             : `*Recogida:* No necesaria`,
         ];
+}
+
+function formatPrice() {
+  const base = `${plan.price} ${plan.unit}`;
+  if (!form.pickup) return base;
+  return lang === "en"
+    ? `${base} + 5,000 MN (pick-up)`
+    : `${base} + 5,000 MN (transporte)`;
+
+      
 
     return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
   }
@@ -169,7 +181,9 @@ export default function BookingModal({ plan, onClose }) {
         <div className="flex items-start justify-between p-5 border-b border-neutral-100">
           <div>
             <h3 className="text-lg font-medium text-neutral-900">{ui.title}</h3>
-            <p className="text-xs text-teal-600 mt-0.5">{ui.subtitle(plan)}</p>
+            <p className="text-xs text-teal-600 mt-0.5">
+  {plan.name} · {plan.duration} · {formatPrice()}
+</p>
           </div>
           <button onClick={onClose} className="text-neutral-400 hover:text-neutral-600 p-1 shrink-0">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
