@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import WhatsAppIcon from "./ui/WhatsAppIcon";
-import { waLink } from "../utils/links";
 import { supabase } from "../utils/supabase";
 import { useLang } from "../i18n/LangContext";
 
@@ -25,7 +23,8 @@ const UsersIcon = () => (
 );
 const PinIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
     <circle cx="12" cy="10" r="3" />
   </svg>
 );
@@ -106,14 +105,12 @@ export default function HeroSlider() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <a 
-            href={waLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-7 py-3.5 rounded-lg transition-colors text-base w-full sm:w-auto"
+          <button
+            onClick={() => document.getElementById("precios")?.scrollIntoView({ behavior: "smooth" })}
+            className="border border-white/40 hover:border-white text-white px-7 py-3.5 rounded-lg transition-colors text-base w-full sm:w-auto"
           >
-            <WhatsAppIcon /> {t.hero.cta}
-          </a>
+            {t.hero.ctaSub2}
+          </button>
           <button
             onClick={() => document.getElementById("servicios")?.scrollIntoView({ behavior: "smooth" })}
             className="border border-white/40 hover:border-white text-white px-7 py-3.5 rounded-lg transition-colors text-base w-full sm:w-auto"

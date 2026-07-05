@@ -16,10 +16,11 @@ export const t = {
       sub: "Una experiencia única sobrevolando la playa más hermosa de Cuba. Vuelos biplaza, seguros y memorables.",
       cta: "Reservar por WhatsApp",
       ctaSub: "Ver servicios",
+      ctaSub2: "Ver precios",
       badge1: "Vuelos seguros",
       badge2: "Video incluido",
       badge3: "Vuelos en parejas",
-      badge4: "Varadero, Cuba",
+      badge4: "Instrucciones de vuelo",
     },
     services: {
       tag: "Lo que ofrecemos",
@@ -70,7 +71,7 @@ export const t = {
       title: "Reserva tu vuelo hoy",
       sub: "Escríbenos por WhatsApp con tu fecha, hotel y habitación y nuestro auto te recogerá en el lugar acordado.",
       location: "Ubicación: Meliá Internacional · Varadero",
-      book: "Reservar por WhatsApp",
+      book: "WhtasApp para más detalles",
     },
     footer: {
       rights: "© 2026 · Varadero, Cuba · Todos los derechos reservados",
@@ -148,7 +149,7 @@ export const t = {
       title: "Book your flight today",
       sub: "Message us on WhatsApp with your date, hotel and room number and our car will pick you up at the agreed location.",
       location: "Location: Meliá Internacional · Varadero",
-      book: "Book via WhatsApp",
+      book: "More details via WhatsApp",
     },
     footer: {
       rights: "© 2026 · Varadero, Cuba · All rights reserved",

@@ -30,6 +30,14 @@ const ChevronIcon = ({ dir }) => (
   </svg>
 );
 
+const CATEGORIES = [
+  { id: "all",        es: "Todos",                  en: "All" },
+  { id: "individual", es: "Vuelos individuales",     en: "Solo flights" },
+  { id: "pareja",     es: "Vuelos en pareja",        en: "Couple flights" },
+  { id: "instruccion",es: "Vuelos de instrucción",   en: "Training flights" },
+  { id: "sorpresas",  es: "Sorpresas",               en: "Surprises" },
+];
+
 function LightBox({ items, index, onClose }) {
   const [current, setCurrent] = useState(index);
   const [touchStart, setTouchStart] = useState(null);
@@ -107,11 +115,52 @@ function LightBox({ items, index, onClose }) {
   );
 }
 
+function GalleryGrid({ items, onOpen }) {
+  if (items.length === 0) return null;
+
+  const gridCols =
+    items.length === 1 ? "grid-cols-1" :
+    items.length === 2 ? "grid-cols-2" :
+    "grid-cols-2 md:grid-cols-3";
+
+  return (
+    <div className={`grid gap-2 ${gridCols} auto-rows-[180px] sm:auto-rows-[240px] md:auto-rows-[280px]`}>
+      {items.map((item, i) => (
+        <div
+          key={item.id}
+          onClick={() => onOpen(i)}
+          className={`relative rounded-xl overflow-hidden cursor-pointer group ${
+            items.length >= 3 && i === 0 ? "row-span-2" : ""
+          }`}
+        >
+          {item.type === "video" ? (
+            <video src={item.url} className="w-full h-full object-cover" />
+          ) : (
+            <img src={item.url} alt={item.label} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+          )}
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-end p-3">
+            <span className="text-white text-xs font-medium drop-shadow">{item.label}</span>
+          </div>
+          {item.type === "video" && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center">
+                <PlayIcon />
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Gallery() {
-  const [items, setItems]       = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [lightbox, setLightbox] = useState(null);
-  const { t } = useLang();
+  const [items, setItems]         = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [lightbox, setLightbox]   = useState(null);
+  const [lightboxItems, setLightboxItems] = useState([]);
+  const { t, lang } = useLang();
 
   useEffect(() => { fetchItems(); }, []);
 
@@ -124,10 +173,19 @@ export default function Gallery() {
     setLoading(false);
   }
 
-  const gridCols =
-    items.length === 1 ? "grid-cols-1" :
-    items.length === 2 ? "grid-cols-2" :
-    "grid-cols-2 md:grid-cols-3";
+  function openLightbox(filteredItems, index) {
+    setLightboxItems(filteredItems);
+    setLightbox(index);
+  }
+
+  const filtered = activeCategory === "all"
+    ? items
+    : items.filter((i) => i.category === activeCategory);
+
+  // Categorías que tienen al menos un item
+  const usedCategories = CATEGORIES.filter((c) =>
+    c.id === "all" ? true : items.some((i) => i.category === c.id)
+  );
 
   return (
     <section id="galeria" className="py-16 px-4 sm:px-6 bg-white">
@@ -139,33 +197,35 @@ export default function Gallery() {
         ) : items.length === 0 ? (
           <div className="text-center text-neutral-400 py-12 text-sm">{t.gallery.empty}</div>
         ) : (
-          <div className={`grid gap-2 ${gridCols} auto-rows-[180px] sm:auto-rows-[240px] md:auto-rows-[280px]`}>
-            {items.map((item, i) => (
-              <div
-                key={item.id}
-                onClick={() => setLightbox(i)}
-                className={`relative rounded-xl overflow-hidden cursor-pointer group ${
-                  items.length >= 3 && i === 0 ? "row-span-2" : ""
-                }`}
-              >
-                {item.type === "video" ? (
-                  <video src={item.url} className="w-full h-full object-cover" />
-                ) : (
-                  <img src={item.url} alt={item.label} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                )}
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-end p-3">
-                  <span className="text-white text-xs font-medium drop-shadow">{item.label}</span>
-                </div>
-                {item.type === "video" && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center">
-                      <PlayIcon />
-                    </div>
-                  </div>
-                )}
+          <>
+            {/* Category filter tabs */}
+            <div className="flex gap-2 flex-wrap mb-6">
+              {usedCategories.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => setActiveCategory(c.id)}
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors border ${
+                    activeCategory === c.id
+                      ? "bg-teal-600 text-white border-teal-600"
+                      : "bg-white text-neutral-600 border-neutral-200 hover:border-neutral-300"
+                  }`}
+                >
+                  {lang === "en" ? c.en : c.es}
+                </button>
+              ))}
+            </div>
+
+            {filtered.length === 0 ? (
+              <div className="text-center text-neutral-400 py-12 text-sm">
+                {lang === "en" ? "No photos in this category yet." : "Aún no hay fotos en esta categoría."}
               </div>
-            ))}
-          </div>
+            ) : (
+              <GalleryGrid
+                items={filtered}
+                onOpen={(i) => openLightbox(filtered, i)}
+              />
+            )}
+          </>
         )}
 
         <p className="text-center text-sm text-neutral-500 mt-5 flex items-center justify-center gap-1.5 flex-wrap">
@@ -178,7 +238,11 @@ export default function Gallery() {
       </div>
 
       {lightbox !== null && (
-        <LightBox items={items} index={lightbox} onClose={() => setLightbox(null)} />
+        <LightBox
+          items={lightboxItems}
+          index={lightbox}
+          onClose={() => { setLightbox(null); setLightboxItems([]); }}
+        />
       )}
     </section>
   );

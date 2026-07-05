@@ -87,8 +87,16 @@ function GalleryGrid() {
   const [loading, setLoading]     = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError]         = useState(null);
+  const [uploadCategory, setUploadCategory] = useState("individual");
 
   const BUCKET = "gallery go-fly";
+
+  const CATS = [
+    { id: "individual",  label: "Vuelos individuales" },
+    { id: "pareja",      label: "Vuelos en pareja" },
+    { id: "instruccion", label: "Vuelos de instrucción" },
+    { id: "sorpresas",   label: "Sorpresas" },
+  ];
 
   useEffect(() => { fetchItems(); }, []);
 
@@ -122,6 +130,7 @@ function GalleryGrid() {
         label:    file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " "),
         type:     isVideo ? "video" : "photo",
         position: items.length,
+        category: uploadCategory,
       }]);
     }
 
@@ -142,19 +151,35 @@ function GalleryGrid() {
     await supabase.from("gallery_items").update({ label }).eq("id", id);
   }
 
+  async function updateCategory(id, category) {
+    await supabase.from("gallery_items").update({ category }).eq("id", id);
+    setItems((prev) => prev.map((i) => i.id === id ? { ...i, category } : i));
+  }
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <h2 className="font-medium text-neutral-900">Galería pública</h2>
-        <label className={`flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="17 8 12 3 7 8" />
-            <line x1="12" y1="3" x2="12" y2="15" />
-          </svg>
-          {uploading ? "Subiendo..." : "Subir fotos / videos"}
-          <input type="file" multiple accept="image/*,video/*" className="hidden" onChange={handleUpload} />
-        </label>
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Selector de categoría antes de subir */}
+          <select
+            value={uploadCategory}
+            onChange={(e) => setUploadCategory(e.target.value)}
+            className="border border-neutral-200 rounded-lg px-3 py-2 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
+          >
+            {CATS.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+          </select>
+
+          <label className={`flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            {uploading ? "Subiendo..." : "Subir fotos / videos"}
+            <input type="file" multiple accept="image/*,video/*" className="hidden" onChange={handleUpload} />
+          </label>
+        </div>
       </div>
 
       {error && <p className="text-sm text-red-500 mb-3">{error}</p>}
@@ -172,13 +197,19 @@ function GalleryGrid() {
               ) : (
                 <img src={item.url} alt={item.label} className="w-full h-32 object-cover" />
               )}
-              <div className="p-2">
+              <div className="p-2 space-y-1">
                 <input
                   defaultValue={item.label}
                   onBlur={(e) => updateLabel(item.id, e.target.value)}
                   className="w-full text-xs text-neutral-700 border border-transparent hover:border-neutral-200 focus:border-teal-400 rounded px-1 py-0.5 focus:outline-none"
                 />
-                <p className="text-xs text-neutral-400 mt-0.5 capitalize">{item.type}</p>
+                <select
+                  value={item.category || "individual"}
+                  onChange={(e) => updateCategory(item.id, e.target.value)}
+                  className="w-full text-xs text-neutral-500 border border-transparent hover:border-neutral-200 focus:border-teal-400 rounded px-1 py-0.5 focus:outline-none bg-transparent"
+                >
+                  {CATS.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+                </select>
               </div>
               <button
                 onClick={() => handleDelete(item)}

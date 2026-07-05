@@ -68,15 +68,6 @@ export default function NavBar() {
             </button>
           </div>
 
-          <a 
-            href={waLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-          >
-            <WhatsAppIcon /> {t.nav.book}
-          </a>
-
           <button
             onClick={() => setMenuOpen((o) => !o)}
             className="md:hidden text-white p-1"

@@ -2,9 +2,7 @@ export const SERVICES = [
   {
     title: "Vuelo en paramotor",
     desc: "Sobrevolamos las playas de Varadero con vistas panorámicas al mar Caribe. Sin necesidad de pista de despegue. Salida desde el Meliá Internacional.",
-    price: "Desde $80 USD",
     priceNote: "/ por persona",
-    badge: "Incluye video",
   },
   {
     title: "Video del vuelo",
@@ -23,14 +21,14 @@ export const SERVICES = [
   {
     title: "Vuelo en pareja",
     desc: "Vivan juntos la experiencia más romántica sobre el Caribe. Dos vuelos consecutivos con video incluido.",
-    price: "$200 USD",
     priceNote: "/ por pareja",
     badge: "Especial pareja",
-  },{
-    title: "Instrucciones de vuelo",
-    desc: "Nos aseguramos de impartir los fundamentos básicos de vuelo para garantizar la seguridad de cada cliente.",
-    price: "Incluido",
-    priceNote: "/ en todos los paquetes",
+  },
+  {
+    title: "Clases de vuelo",
+    desc: "Impartimos clases de vuelo para la formación profesional de nuevos pilotos.",
+    price: "A negociar",
+    priceNote: "/ directo al whatsapp",
     badge: null,
   },
 ];
@@ -156,7 +154,6 @@ export const SERVICES_EN = [
   {
     title: "Paramotor flight",
     desc: "We fly over Varadero's beaches with panoramic views of the Caribbean Sea. No runway needed.",
-    price: "From $80 USD",
     priceNote: "/ per person",
     badge: "Video included",
   },
@@ -177,9 +174,15 @@ export const SERVICES_EN = [
   {
     title: "Couple's flight",
     desc: "Experience the most romantic flight over the Caribbean together. Two consecutive flights with video.",
-    price: "$200 USD",
     priceNote: "/ per couple",
     badge: "Special",
+  },
+  {
+    title: "Fly classes",
+    desc: "We provide flight training for the professional development of new pilots..",
+    price: "Negotiate",
+    priceNote: "/ via WhatsApp.",
+    badge: null,
   },
 ];
 
