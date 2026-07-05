@@ -115,19 +115,17 @@ export default function BookingModal({ plan, onClose }) {
             ? `*Recogida:* Sí — ${form.pickupLocation}`
             : `*Recogida:* No necesaria`,
         ];
-}
+        
+    return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
+  }
 
-function formatPrice() {
+  function formatPrice() {
   const base = `${plan.price} ${plan.unit}`;
   if (!form.pickup) return base;
   return lang === "en"
     ? `${base} + 5,000 MN (pick-up)`
     : `${base} + 5,000 MN (transporte)`;
-
-      
-
-    return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
-  }
+}
 
   const isValid = form.name && form.id && form.tel && form.date && form.time &&
     (!form.pickup || form.pickupLocation) && !slotFull;
@@ -277,6 +275,8 @@ function formatPrice() {
                 <input
                   type="time"
                   required
+                  min="09:00"
+                  max="18:00"
                   value={form.time}
                   onChange={(e) => { set("time", e.target.value); setSlotCount(null); }}
                   className={`w-full border rounded-lg px-3 py-2.5 text-sm text-neutral-900 focus:outline-none focus:ring-2 ${

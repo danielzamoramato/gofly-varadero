@@ -105,18 +105,28 @@ export default function HeroSlider() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
+
           <button
             onClick={() => document.getElementById("precios")?.scrollIntoView({ behavior: "smooth" })}
             className="border border-white/40 hover:border-white text-white px-7 py-3.5 rounded-lg transition-colors text-base w-full sm:w-auto"
           >
             {t.hero.ctaSub2}
           </button>
+
           <button
             onClick={() => document.getElementById("servicios")?.scrollIntoView({ behavior: "smooth" })}
             className="border border-white/40 hover:border-white text-white px-7 py-3.5 rounded-lg transition-colors text-base w-full sm:w-auto"
           >
             {t.hero.ctaSub}
           </button>
+
+          <button
+            onClick={() => document.getElementById("galeria")?.scrollIntoView({ behavior: "smooth" })}
+            className="border border-white/40 hover:border-white text-white px-7 py-3.5 rounded-lg transition-colors text-base w-full sm:w-auto"
+          >
+            {t.hero.ctaSub3}
+          </button>
+
         </div>
 
         <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-3 sm:gap-6 mt-10 text-sky-200 text-sm">
