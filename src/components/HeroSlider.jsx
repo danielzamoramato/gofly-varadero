@@ -90,11 +90,11 @@ export default function HeroSlider() {
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30" />
 
-      <div className="relative z-10 text-center px-5 max-w-3xl mx-auto">
+      <div className="relative z-10 text-center px-5 max-w-5xl mx-auto">
         <img
           src="logo.png"
           alt="Logo"
-          className="w-24 h-24 sm:w-32 sm:h-32 object-contain mx-auto mb-6 drop-shadow-lg"
+          className="w-32 h-30 sm:w-40 sm:h-40 object-contain mx-auto mb-6 drop-shadow-lg"
         />
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-medium text-white leading-tight mb-5 drop-shadow-lg">
           {t.hero.title1} <span className="text-sky-300">{t.hero.titleHighlight}</span>
