@@ -30,7 +30,7 @@ export const t = {
     pricing: {
       tag: "Tarifas",
       title: "Precios transparentes",
-      sub: "Sin costos ocultos. Todos los paquetes incluyen video de recuerdo. Todos los paquetes se cobran antes de cada vuelo",
+      sub: "Aceptamos varias formas de pago: USD al cash, CUP al cambio en El Toque, transferencias Zelle, PayPal y Bizum. Todos los paquetes se cobran antes de cada vuelo",
       book: "Reservar",
       swipe: "Desliza para ver todos los planes",
     },
@@ -110,7 +110,7 @@ export const t = {
     pricing: {
       tag: "Rates",
       title: "Transparent pricing",
-      sub: "No hidden fees. All packages include a souvenir video. All packages are charged before each flight.",
+      sub: "We accept various forms of payment: cash USD, CUP at the El Toque exchange rate, Zelle transfers, PayPal, and Bizum. All packages are charged before each flight.",
       book: "Book",
       swipe: "Swipe to see all plans",
     },

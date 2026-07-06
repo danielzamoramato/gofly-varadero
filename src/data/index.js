@@ -118,7 +118,7 @@ export const REVIEWS = [];
 export const FAQS = [
   {
     q: "¿Cuales son las formas de pago?",
-    a: "Aceptamos USD, Mn al cambio en la pagina El Toque a como esté en el momento, transferencias Zelle, Paypal y Bizzum",
+    a: "Aceptamos USD, Mn al cambio en la pagina El Toque a como esté en el momento, transferencias Zelle, Paypal y Bizum",
   },
   {
     q: "¿Necesito experiencia previa para volar?",
@@ -191,6 +191,7 @@ export const SERVICES_EN = [
 ];
 
 export const FAQS_EN = [
+  { q: "Which are the payment methods?", a: "We accept various forms of payment: cash USD, CUP at the El Toque exchange rate, Zelle transfers, PayPal, and Bizum." },
   { q: "Do I need prior experience to fly?", a: "Not at all! Our flights are tandem with a certified pilot. All you need is the desire to experience it." },
   { q: "How long is the flight?", a: "It depends on the package: Basic 10 min, Standard 15–17 min, Luxury 20–25 min. All include video." },
   { q: "Is it safe?", a: "Safety is our top priority. We have certified pilots and regularly inspected equipment. We don't fly if weather conditions are not optimal." },
