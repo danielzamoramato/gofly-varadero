@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabaseAdmin as supabase } from "../utils/supabase";
+import AvailabilityManager from "../components/AvailabilityManager";
 
 const ADMIN_PASSWORD = "gofly2026";
 
@@ -531,6 +532,7 @@ function Dashboard() {
 
   const TABS = [
     { id: "bookings", label: "Reservas" },
+    { id: "availability", label: "Disponibilidad" },
     { id: "reviews",  label: "Reseñas" },
     { id: "gallery",  label: "Galería" },
   ];
@@ -578,6 +580,8 @@ function Dashboard() {
           <GalleryManager />
         ) : tab === "bookings" ? (
           <BookingsManager />
+          ) : tab === "availability" ? (
+          <AvailabilityManager />
         ) : (
           <>
             <div className="flex gap-2 mb-6">

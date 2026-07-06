@@ -182,3 +182,31 @@
     border-right-color: var(--border);
   }
 }
+
+.react-calendar {
+
+    width: 100%;
+
+    border: none;
+
+    font-family: inherit;
+
+}
+
+.blocked-day {
+
+    background: #dc2626 !important;
+
+    color: white !important;
+
+    border-radius: 8px;
+
+}
+
+.react-calendar__tile--active {
+
+    background: #0f766e !important;
+
+    color: white;
+
+}
