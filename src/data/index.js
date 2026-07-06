@@ -1,6 +1,6 @@
 export const SERVICES = [
   {
-    title: "Vuelo en paramotor",
+    title: "Vuelo tandem en paramotor",
     desc: "Sobrevolamos las playas de Varadero con vistas panorámicas al mar Caribe. Sin necesidad de pista de despegue. Salida desde el Meliá Internacional y volamos a sus alrededores.",
     priceNote: "/ por persona",
   },
@@ -116,6 +116,10 @@ export const GALLERY = [];
 export const REVIEWS = [];
 
 export const FAQS = [
+  {
+    q: "¿Cuales son las formas de pago?",
+    a: "Aceptamos USD, Mn al cambio en la pagina El Toque a como esté en el momento, transferencias Zelle, Paypal y Bizzum",
+  },
   {
     q: "¿Necesito experiencia previa para volar?",
     a: "No, para nada. Nuestros vuelos son biplaza con un piloto certificado. Solo necesitas ganas de vivir la experiencia.",
