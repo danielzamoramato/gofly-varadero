@@ -32,7 +32,7 @@ const ChevronIcon = ({ dir }) => (
 
 const CATEGORIES = [
   { id: "all",        es: "Todos",                  en: "All" },
-  { id: "individual", es: "Vuelos individuales",     en: "Solo flights" },
+  { id: "individual", es: "Vuelos Tandem",     en: "Solo flights" },
   { id: "pareja",     es: "Vuelos en pareja",        en: "Couple flights" },
   { id: "instruccion",es: "Vuelos de instrucción",   en: "Training flights" },
   { id: "sorpresas",  es: "Sorpresas",               en: "Surprises" },
