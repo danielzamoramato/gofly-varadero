@@ -5,7 +5,7 @@ import { supabase } from "../../utils/supabase";
 import WhatsAppIcon from "./WhatsAppIcon";
 
 const MAX_PER_SLOT = 2;
-const PICKUP_PRICE = 5000;
+const PICKUP_PRICE = 0;
 
 // Horarios disponibles: 8:00 a 17:00 cada 30 min
 const TIME_SLOTS = [];

@@ -1400,7 +1400,7 @@ function Dashboard() {
       </div>
 
       <div className="bg-white border-b border-neutral-200 px-6">
-        <div className="flex gap-0">
+        <div className="flex gap-0 flex-nowrap overflow-x-auto">
           {TABS.map((t) => (
             <button
               key={t.id}
